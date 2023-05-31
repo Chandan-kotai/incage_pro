@@ -12,22 +12,21 @@ const SignIn = ({ navigation }) => {
     // const dispatch = useDispatch();
 
     const handleLogin = () => {
-        // const validationErrors = validateData();
-        // setFormError(validationErrors);
+        const validationErrors = validateData();
+        setFormError(validationErrors);
 
-        // if (Object.keys(validationErrors).length === 0) {
-        //     const formData = new FormData();
-        //     formData.append('email', formValue.email);
-        //     formData.append('password', formValue.password);
-        //     // dispatch(userLogin({ formData: formData, Toast, navigation }))
-        //     setFormValue({ email: "", password: "" })
-        // }
-        navigation.replace("scanner");
+        if (Object.keys(validationErrors).length === 0) {
+            const formData = new FormData();
+            formData.append('email', formValue.email);
+            formData.append('password', formValue.password);
+            // dispatch(userLogin({ formData: formData, Toast, navigation }))
+            // setFormValue({ email: "", password: "" })
+        }
+        // navigation.replace("scanner");
     }
 
     const validateData = () => {
         const error = {};
-        // const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         const emailRegex = /^([a-zA-Z0-9-.]+)@([a-z]{5,12}).[a-z]{2,4}?$/;
         const pwRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
