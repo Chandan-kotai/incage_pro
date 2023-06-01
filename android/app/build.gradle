@@ -98,6 +98,9 @@ android {
         applicationId "com.incagesmartlockpro"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        
+        /* for rn camera -> qrcode scanner */
+        missingDimensionStrategy 'react-native-camera', 'general'
         versionCode 1
         versionName "1.0"
     }

@@ -1,12 +1,33 @@
-import { SafeAreaView, StyleSheet, Text, View, Image, Alert } from 'react-native'
-import React from 'react'
+import { SafeAreaView, StyleSheet, Text, View, Image, Alert, Linking } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import CustomButton from '../../utils/CustomButton'
+import QRCodeScanner from 'react-native-qrcode-scanner';
+import { RNCamera } from 'react-native-camera';
 
 const Scanner = ({ navigation }) => {
+    const [isScan, setIsSacn] = useState(false);
+    const [locData, setLocData] = useState(null);
 
     const scanBarCode = () => {
-        navigation.navigate("map")
+        // setIsSacn(true);
+        // console.log("scan bar code");
+        // console.log("scan bar code", isScan);
+        navigation.navigate("map");
     }
+
+    const onSuccess = (e) => {
+        if (e?.data) {
+            setLocData(JSON.parse(e.data));
+            // setIsSacn(false);
+            navigation.navigate("map");
+        }
+    }
+
+    console.log("Location Data =>", locData);
+
+    // useEffect(() => {
+
+    // }, [])
 
     return (
         <SafeAreaView style={styles.parent}>
@@ -15,8 +36,19 @@ const Scanner = ({ navigation }) => {
             </View>
 
             <View style={styles.body}>
+                {/* scanner window */}
                 <View style={styles.imageWrap}>
-                    <Image style={styles.scannerlogo} source={require("../../assets/images/scanner.png")} />
+                    {isScan ?
+                        <QRCodeScanner
+                            onRead={(e) => onSuccess(e)}
+                            reactivate={true}
+                            containerStyle={{ alignItems: "center", justifyContent: "center" }}
+                            cameraStyle={{ width: 300, height: 250 }}
+                            showMarker={true}
+                        // flashMode={RNCamera.Constants.FlashMode.torch}
+                        />
+                        : <Image style={{}} source={require('../../assets/images/scanner.png')}/>
+                    }
                 </View>
                 <CustomButton btnText={"Scan Barcode"} onPressFunc={scanBarCode} />
             </View>
@@ -41,14 +73,16 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    imageWrap:{
-        marginBottom: 120,
+    imageWrap: {
+        marginBottom: 80,
         borderWidth: 3,
+        alignItems: "center",
+        justifyContent: "center",
+        width: 306,
+        height: 406,
+        borderColor: "#2D75FF",
+        borderRadius: 3,
     },
-    scannerlogo: {
-        width: 200,
-        height: 200
-    }
 })
 
 

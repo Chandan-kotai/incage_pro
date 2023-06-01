@@ -21,8 +21,8 @@ const SignIn = ({ navigation }) => {
             formData.append('password', formValue.password);
             // dispatch(userLogin({ formData: formData, Toast, navigation }))
             // setFormValue({ email: "", password: "" })
+            navigation.replace("scanner");
         }
-        // navigation.replace("scanner");
     }
 
     const validateData = () => {

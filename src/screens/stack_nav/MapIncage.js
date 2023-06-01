@@ -4,6 +4,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import StartNavigation from '../../utils/StartNavigation';
 import NavigationOptions from '../../utils/NavigationOptions';
 import LocatePackage from '../../utils/LocatePackage';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 const MapIncage = ({ navigation, route }) => {
     const refRBSheet = useRef();
@@ -28,7 +29,21 @@ const MapIncage = ({ navigation, route }) => {
     return (
         <SafeAreaView style={styles.parent}>
             <View>
-                <Image style={{}} source={require("../../assets/images/map.png")} />
+                {/* Map View */}
+                <View style={{ flex: 1 }}>
+                    <MapView
+                        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                        style={styles.map}
+                        region={{
+                            latitude: 37.78825,
+                            longitude: -122.4324,
+                            latitudeDelta: 0.015,
+                            longitudeDelta: 0.0121,
+                        }}
+                    >
+                    </MapView>
+                </View>
+
                 <RBSheet
                     height={isStart ? 150 : 230}
                     animationType='slide'

@@ -1,14 +1,14 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import {
-  View
-} from 'react-native';
 import Splash from './src/screens/Splash';
 import MapIncage from './src/screens/stack_nav/MapIncage';
 import Scanner from './src/screens/stack_nav/Scanner';
 import SignIn from './src/screens/stack_nav/SignIn';
 import SplashSecond from './src/screens/SplashSecond';
+import {enableLatestRenderer} from 'react-native-maps';
+
+enableLatestRenderer();
 
 const RootStack = createNativeStackNavigator()
 
