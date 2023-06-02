@@ -4,7 +4,8 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import StartNavigation from '../../utils/StartNavigation';
 import NavigationOptions from '../../utils/NavigationOptions';
 import LocatePackage from '../../utils/LocatePackage';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
+// import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 const MapIncage = ({ navigation, route }) => {
     const refRBSheet = useRef();
@@ -22,6 +23,10 @@ const MapIncage = ({ navigation, route }) => {
         refRBSheet.current.close()
     }
 
+    const onChangeRegion = (region) => {
+        console.log(region.latitude + " " + region.longitude);
+    }
+
     useEffect(() => {
         refRBSheet.current.open()
     }, [refRBSheet, isStart])
@@ -30,17 +35,26 @@ const MapIncage = ({ navigation, route }) => {
         <SafeAreaView style={styles.parent}>
             <View>
                 {/* Map View */}
-                <View style={{ flex: 1 }}>
+                <View style={{}}>
                     <MapView
-                        provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                        style={styles.map}
+                        // provider={PROVIDER_GOOGLE} // remove if not using Google Maps
+                        style={{ borderWidth: 1, width: "100%", height: "100%", }}
                         region={{
-                            latitude: 37.78825,
-                            longitude: -122.4324,
-                            latitudeDelta: 0.015,
-                            longitudeDelta: 0.0121,
+                            latitude: 22.56812764180996,
+                            longitude: 88.43338625505567,
+                            latitudeDelta: 0.05,
+                            longitudeDelta: 0.05,
+                            // latitudeDelta: 0.015,
+                            // longitudeDelta: 0.0121,
                         }}
+                        onRegionChange={onChangeRegion}
                     >
+                        <Marker
+                            draggable
+                            coordinate={{ latitude: 22.568546189065163, longitude: 88.43366352841258 }}
+                            title={"Kotai Electronics"}
+                            description={"5th Floor, Systron Building, Near RDB Cinema, Sector V, Kolkata, West Bengal 700091"}
+                        />
                     </MapView>
                 </View>
 
@@ -83,8 +97,8 @@ const MapIncage = ({ navigation, route }) => {
 const styles = StyleSheet.create({
     parent: {
         flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
+        // alignItems: "center",
+        // justifyContent: "center",
 
     },
 })
