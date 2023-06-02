@@ -5,7 +5,6 @@ import StartNavigation from '../../utils/StartNavigation';
 import NavigationOptions from '../../utils/NavigationOptions';
 import LocatePackage from '../../utils/LocatePackage';
 import MapView, { Marker } from 'react-native-maps';
-// import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 const MapIncage = ({ navigation, route }) => {
     const refRBSheet = useRef();
@@ -27,8 +26,10 @@ const MapIncage = ({ navigation, route }) => {
         console.log(region.latitude + " " + region.longitude);
     }
 
+
+
     useEffect(() => {
-        refRBSheet.current.open()
+        refRBSheet.current.open();
     }, [refRBSheet, isStart])
 
     return (
@@ -37,20 +38,17 @@ const MapIncage = ({ navigation, route }) => {
                 {/* Map View */}
                 <View style={{}}>
                     <MapView
-                        // provider={PROVIDER_GOOGLE} // remove if not using Google Maps
-                        style={{ borderWidth: 1, width: "100%", height: "100%", }}
+                        style={{ width: "100%", height: "100%", }}
                         region={{
                             latitude: 22.56812764180996,
                             longitude: 88.43338625505567,
                             latitudeDelta: 0.05,
                             longitudeDelta: 0.05,
-                            // latitudeDelta: 0.015,
-                            // longitudeDelta: 0.0121,
                         }}
                         onRegionChange={onChangeRegion}
                     >
                         <Marker
-                            draggable
+                            // draggable
                             coordinate={{ latitude: 22.568546189065163, longitude: 88.43366352841258 }}
                             title={"Kotai Electronics"}
                             description={"5th Floor, Systron Building, Near RDB Cinema, Sector V, Kolkata, West Bengal 700091"}
@@ -73,7 +71,6 @@ const MapIncage = ({ navigation, route }) => {
                             height: 3,
                             width: 50,
                         },
-
                     }}
                 >
                     {isStart === true ?
@@ -81,7 +78,7 @@ const MapIncage = ({ navigation, route }) => {
                         : null
                     }
                     {isStart === false ?
-                        <NavigationOptions cancel={cancellFunc} onPress={locatePackage} />
+                        <NavigationOptions cancel={cancellFunc} coordinate={{latitude: 22.568546189065163, longitude: 88.43366352841258}} />
                         : null
                     }
                     {isStart === null ?
