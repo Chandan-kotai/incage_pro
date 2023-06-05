@@ -9,21 +9,22 @@ const Scanner = ({ navigation }) => {
     const [locData, setLocData] = useState(null);
 
     const scanBarCode = () => {
-        // setIsSacn(true);
+        setIsSacn(true);
         // console.log("scan bar code");
         // console.log("scan bar code", isScan);
-        navigation.navigate("map");
+        // navigation.navigate("map");
     }
 
     const onSuccess = (e) => {
+        // console.log("event data=>", typeof e.data);
         if (e?.data) {
             setLocData(JSON.parse(e.data));
-            // setIsSacn(false);
-            navigation.navigate("map");
+            setIsSacn(false);
+            navigation.navigate("map", {data: JSON.parse(e?.data)});
         }
     }
 
-    console.log("Location Data =>", locData);
+    // console.log("Location Data =>", locData);
 
     // useEffect(() => {
 
@@ -42,6 +43,7 @@ const Scanner = ({ navigation }) => {
                         <QRCodeScanner
                             onRead={(e) => onSuccess(e)}
                             reactivate={true}
+                            reactivateTimeout={3000}
                             containerStyle={{ alignItems: "center", justifyContent: "center" }}
                             cameraStyle={{ width: 300, height: 250 }}
                             showMarker={true}

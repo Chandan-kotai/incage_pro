@@ -1,32 +1,37 @@
-import { StyleSheet, Text, View, SafeAreaView, Button, TouchableOpacity, Image, PermissionsAndroid, Linking } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Button, TouchableOpacity, Image, PermissionsAndroid, Linking, Alert } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import RBSheet from "react-native-raw-bottom-sheet";
 import StartNavigation from '../../utils/StartNavigation';
 import NavigationOptions from '../../utils/NavigationOptions';
 import LocatePackage from '../../utils/LocatePackage';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Circle, Marker } from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 import MapViewDirections from 'react-native-maps-directions';
 import { GOOGLE_MAPS_APIKEY } from '../../services/config/GoogleMapApi';
+import * as geolib from 'geolib';
 
-const MapIncage = ({ navigation, route }) => {
+const MapIncage = ({ navigation, route, }) => {
     const [currentLatitude, setCurrentLatitude] = useState('');
     const [currentLongitude, setCurrentLongitude] = useState('');
     const refRBSheet = useRef();
+    const mapRef = useRef();
     const [isStart, setIsStart] = useState(true);
+    const { data } = route?.params;
+    const { location, device_id } = data;
+
 
     const origin = {
         latitude: Number(currentLatitude),
         longitude: Number(currentLongitude),
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitudeDelta: 0.026,
+        longitudeDelta: 0.009,
     }
 
     const destination = {
-        latitude: 22.57837969499716,
-        longitude: 88.43033557757735,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
+        latitude: Number(location?.latitude),
+        longitude: Number(location?.longitude),
+        latitudeDelta: 0.026,
+        longitudeDelta: 0.009,
     }
 
     const startNavigation = () => {
@@ -38,10 +43,30 @@ const MapIncage = ({ navigation, route }) => {
     }
 
     const onChangeRegion = (region) => {
-        // console.log(region.latitude + " " + region.longitude);
+        const curCoordinates = {
+            latitude: region.latitude,
+            longitude: region.longitude,
+            latitudeDelta: 0.026,
+            longitudeDelta: 0.009,
+        }
+        isInsideCircle(curCoordinates)
     }
 
+    const isInsideCircle = (curCoordinates) => {
+        const res = geolib.isPointWithinRadius(
+            curCoordinates,
+            destination,
+            100
+        );
 
+        if(res){
+            Alert.alert("Reached");
+        }else{
+            Alert.alert("not yet Reached");
+        }
+
+        console.log("isInsideCircle =>", res);
+    }
 
     useEffect(() => {
 
@@ -61,14 +86,14 @@ const MapIncage = ({ navigation, route }) => {
                 if (granted === PermissionsAndroid.RESULTS.GRANTED) {
                     Geolocation.getCurrentPosition(position => {
                         let lat = JSON.stringify(position.coords.latitude);
-                        console.log(lat);
+                        // console.log(lat);
                         setCurrentLatitude(lat);
                         let long = JSON.stringify(position.coords.longitude);
-                        console.log(long);
+                        // console.log(long);
                         setCurrentLongitude(long);
                     }, (error) => {
                         Linking.sendIntent('android.settings.LOCATION_SOURCE_SETTINGS');
-                    }
+                    },
                     )
 
                 } else {
@@ -88,6 +113,7 @@ const MapIncage = ({ navigation, route }) => {
                 {/* Map View */}
                 <View style={{}}>
                     <MapView
+                        ref={mapRef}
                         style={{ width: "100%", height: "100%", }}
                         region={origin}
                         onRegionChange={onChangeRegion}
@@ -95,15 +121,23 @@ const MapIncage = ({ navigation, route }) => {
                         <Marker
                             // draggable
                             coordinate={origin}
-                            // title={"TCS Gitobitan"}
-                            // description={"plot no.54 &55, Street Number 18, DN Block, Sector V, Bidhannagar, Kolkata, West Bengal 700091"}
+                            image={require("../../assets/icons/pointer.png")}
                         />
 
                         <Marker
                             // draggable
                             coordinate={destination}
-                            title={"TCS Gitobitan"}
+                            title={device_id}
                             description={"plot no.54 &55, Street Number 18, DN Block, Sector V, Bidhannagar, Kolkata, West Bengal 700091"}
+                            image={require("../../assets/icons/locationlock.png")}
+                        />
+
+                        <Circle
+                            center={destination}
+                            radius={100}
+                            strokeWidth={2}
+                            strokeColor="#0ca33d"
+                            fillColor="#dfe6e9"
                         />
 
                         <MapViewDirections
@@ -112,6 +146,20 @@ const MapIncage = ({ navigation, route }) => {
                             apikey={GOOGLE_MAPS_APIKEY}
                             strokeWidth={3}
                             strokeColor="hotpink"
+                            optimizeWaypoints={true}
+                            onReady={res => {
+                                console.log("distance=>", res.distance);
+                                console.log("duration=>", res.duration);
+
+                                mapRef.current.fitToCoordinates(result.coordinates, {
+                                    edgePadding: {
+                                        right: 30,
+                                        bottom: 200,
+                                        left: 30,
+                                        top: 200,
+                                    }
+                                })
+                            }}
                         />
 
                     </MapView>
@@ -122,7 +170,7 @@ const MapIncage = ({ navigation, route }) => {
                     animationType='slide'
                     ref={refRBSheet}
                     closeOnDragDown={true}
-                    closeOnPressMask={false}
+                    closeOnPressMask={true}
                     customStyles={{
                         wrapper: {
                             backgroundColor: "transparent",
