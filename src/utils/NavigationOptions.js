@@ -53,7 +53,7 @@ const NavigationOptions = ({ cancel, coordinate }) => {
 
             <View style={{ marginTop: 20 }}>
                 <TouchableOpacity style={styles.button} onPress={cancel}>
-                    <Text>Cancel</Text>
+                    <Text style={{color:"#fff", fontWeight: "bold", fontSize: 20}}>Cancel</Text>
                 </TouchableOpacity>
             </View>
 
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         paddingVertical: 8,
-        paddingHorizontal: 120,
+        paddingHorizontal: 20,
         borderRadius: 4,
     },
     card: {

@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, TextInput, Alert, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CustomButton from '../../utils/CustomButton'
-// import { useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { userLogin } from '../../services/slices/UserSlice'
 
 const SignIn = ({ navigation }) => {
     const [showPassword, setShowPassword] = useState(false)
-    const [formValue, setFormValue] = useState({ email: "chandan@gmail.com", password: "123456Ab@" });
+    const [formValue, setFormValue] = useState({ email: "peter@gmail.com", password: "Abcd@123" });
     const [formError, setFormError] = useState({});
     const [isModal, setIsModal] = useState(false);
-    // const { token, status, login_error } = useSelector(state => state.authSlice);
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
     const handleLogin = () => {
         const validationErrors = validateData();
@@ -19,9 +19,8 @@ const SignIn = ({ navigation }) => {
             const formData = new FormData();
             formData.append('email', formValue.email);
             formData.append('password', formValue.password);
-            // dispatch(userLogin({ formData: formData, Toast, navigation }))
+            dispatch(userLogin({ loginData: formData, navigation }))
             // setFormValue({ email: "", password: "" })
-            navigation.replace("scanner");
         }
     }
 
@@ -139,59 +138,59 @@ const SignIn = ({ navigation }) => {
 
 const styles = StyleSheet.create({
     parent: {
-      // flex: 1,
-      justifyContent: "center",
+        // flex: 1,
+        justifyContent: "center",
     },
     headImage: {
-      width: 250,
-      height: 80,
-      marginBottom: 50,
-      marginTop: 20,
+        width: 250,
+        height: 80,
+        marginBottom: 50,
+        marginTop: 20,
     },
     inputGrp: {
-      marginHorizontal: 28,
-      alignSelf: "stretch"
+        marginHorizontal: 28,
+        alignSelf: "stretch"
     },
     labels: {
-      fontSize: 15,
-      marginTop: 10,
-      marginLeft: 2,
-      marginBottom: 10,
-      color: "#3A3D3E",
+        fontSize: 15,
+        marginTop: 10,
+        marginLeft: 2,
+        marginBottom: 10,
+        color: "#3A3D3E",
     },
     inputBoxWrap: {
-      borderWidth: 1,
-      borderRadius: 8,
-      borderColor: '#2D75FF',
+        borderWidth: 1,
+        borderRadius: 8,
+        borderColor: '#2D75FF',
     },
     inputBox: {
-      paddingLeft: 10,
-      marginRight: 45,
-      paddingVertical: 5,
+        paddingLeft: 10,
+        marginRight: 45,
+        paddingVertical: 5,
     },
     eye: {
-      position: "absolute",
-      top: 2,
-      right: 10,
-      padding: 5,
+        position: "absolute",
+        top: 2,
+        right: 10,
+        padding: 5,
     },
     sepWrap: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginTop: 50,
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 50,
     },
     separator: {
-      flex: 1,
-      height: 1,
-      marginHorizontal: 20,
-      backgroundColor: 'black',
+        flex: 1,
+        height: 1,
+        marginHorizontal: 20,
+        backgroundColor: 'black',
     },
     error: {
-      color: "#f00",
-      marginLeft: 10,
-      marginTop: 3,
-      fontSize: 12,
+        color: "#f00",
+        marginLeft: 10,
+        marginTop: 3,
+        fontSize: 12,
     }
-  })
+})
 
 export default SignIn

@@ -1,7 +1,16 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { getDeviceInfo } from '../services/slices/UserSlice';
 
-const LocatePackage = () => {
+const LocatePackage = ({navigation}) => {
+    const dispatch = useDispatch();
+    const connectToDevice = () => {
+        const formData = new FormData();
+        formData.append("device_id", "SN:0000101592");
+        dispatch(getDeviceInfo({formData, navigation}));
+    }
+
     return (
         <View style={{ alignItems: "center", justifyContent: "center" }}>
             <Text style={{ fontSize: 22, color: "#000", textAlign: "center", width: 230, marginTop: 10, fontWeight: "bold" }}>
@@ -10,11 +19,11 @@ const LocatePackage = () => {
             </Text>
             <View style={styles.buttonWrap}>
                 <TouchableOpacity style={styles.buttonYes}>
-                    <Text style={{color: "#000"}}>Not Yet</Text>
+                    <Text style={{ color: "#000" }}>Not Yet</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.buttonNo}>
-                    <Text style={{color: "#fff"}}>Yes</Text>
+                <TouchableOpacity style={styles.buttonNo} onPress={() => connectToDevice()}>
+                    <Text style={{ color: "#fff" }}>Yes</Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -22,7 +31,7 @@ const LocatePackage = () => {
 }
 
 const styles = StyleSheet.create({
-    buttonWrap:{
+    buttonWrap: {
         flexDirection: "row",
         // alignItems: "center",
         // justifyContent: "space-between",

@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, Button, TouchableOpacity, Image, PermissionsAndroid, Linking, Alert } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import RBSheet from "react-native-raw-bottom-sheet";
-import StartNavigation from '../../utils/StartNavigation';
 import NavigationOptions from '../../utils/NavigationOptions';
 import LocatePackage from '../../utils/LocatePackage';
 import MapView, { Circle, Marker } from 'react-native-maps';
@@ -13,6 +12,7 @@ import * as geolib from 'geolib';
 const MapIncage = ({ navigation, route, }) => {
     const [currentLatitude, setCurrentLatitude] = useState('');
     const [currentLongitude, setCurrentLongitude] = useState('');
+    const [isClear, setIsClear] = useState(false);
     const refRBSheet = useRef();
     const mapRef = useRef();
     const [isStart, setIsStart] = useState(true);
@@ -34,9 +34,9 @@ const MapIncage = ({ navigation, route, }) => {
         longitudeDelta: 0.009,
     }
 
-    const startNavigation = () => {
-        setIsStart(false)
-    }
+    // const startNavigation = () => {
+    //     setIsStart(false)
+    // }
 
     const cancellFunc = () => {
         refRBSheet.current.close()
@@ -49,62 +49,77 @@ const MapIncage = ({ navigation, route, }) => {
             latitudeDelta: 0.026,
             longitudeDelta: 0.009,
         }
-        isInsideCircle(curCoordinates)
+        isInsideCircle(curCoordinates);
     }
 
     const isInsideCircle = (curCoordinates) => {
         const res = geolib.isPointWithinRadius(
             curCoordinates,
             destination,
-            100
+            30
         );
 
-        if(res){
-            Alert.alert("Reached");
-        }else{
-            Alert.alert("not yet Reached");
+        if (res) {
+            // Alert.alert("Reached");
+            setIsStart(false)
+            setIsClear(true)
+        } else {
+            // Alert.alert("not yet Reached");
         }
 
         console.log("isInsideCircle =>", res);
     }
 
+    const requestLocationPermission = async () => {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                    title: "Incage™",
+                    message: 'Incage™ App Need to Access the Device Location',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                },
+            )
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                getCurrentLocation()
+            } else {
+                Alert.alert("Permission Denied!!!")
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const getCurrentLocation = () => {
+        Geolocation.getCurrentPosition(position => {
+            let lat = JSON.stringify(position.coords.latitude);
+            // console.log(lat);
+            setCurrentLatitude(lat);
+            let long = JSON.stringify(position.coords.longitude);
+            // console.log(long);
+            setCurrentLongitude(long);
+        }, (error) => {
+            Linking.sendIntent('android.settings.LOCATION_SOURCE_SETTINGS');
+        },
+        )
+    }
+
+
     useEffect(() => {
-
         refRBSheet.current.open();
+        requestLocationPermission();
 
-        const requestLocationPermission = async () => {
-            try {
-                const granted = await PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                    {
-                        title: "Incage™",
-                        message: 'Incage™ App Need to Access the Device Location',
-                        buttonNegative: 'Cancel',
-                        buttonPositive: 'OK',
-                    },
-                )
-                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                    Geolocation.getCurrentPosition(position => {
-                        let lat = JSON.stringify(position.coords.latitude);
-                        // console.log(lat);
-                        setCurrentLatitude(lat);
-                        let long = JSON.stringify(position.coords.longitude);
-                        // console.log(long);
-                        setCurrentLongitude(long);
-                    }, (error) => {
-                        Linking.sendIntent('android.settings.LOCATION_SOURCE_SETTINGS');
-                    },
-                    )
+        // background threading
+        const interval = setInterval(()=>{
+            getCurrentLocation()
+        }, 10000)
 
-                } else {
-                    Alert.alert("Permission Denied!!!")
-                }
-            } catch (err) {
-                console.log(err);
+        return ()=>{
+            if(isClear){
+                clearInterval(interval);
             }
         }
-
-        requestLocationPermission()
     }, [refRBSheet, isStart])
 
     return (
@@ -134,7 +149,7 @@ const MapIncage = ({ navigation, route, }) => {
 
                         <Circle
                             center={destination}
-                            radius={100}
+                            radius={30}
                             strokeWidth={2}
                             strokeColor="#0ca33d"
                             fillColor="#dfe6e9"
@@ -144,33 +159,33 @@ const MapIncage = ({ navigation, route, }) => {
                             origin={origin}
                             destination={destination}
                             apikey={GOOGLE_MAPS_APIKEY}
-                            strokeWidth={3}
-                            strokeColor="hotpink"
-                            optimizeWaypoints={true}
-                            onReady={res => {
-                                console.log("distance=>", res.distance);
-                                console.log("duration=>", res.duration);
+                            // strokeWidth={3}
+                            // strokeColor="hotpink"
+                            // optimizeWaypoints={true}
+                            // onReady={res => {
+                            //     console.log("distance=>", res.distance);
+                            //     console.log("duration=>", res.duration);
 
-                                mapRef.current.fitToCoordinates(result.coordinates, {
-                                    edgePadding: {
-                                        right: 30,
-                                        bottom: 200,
-                                        left: 30,
-                                        top: 200,
-                                    }
-                                })
-                            }}
+                            //     mapRef.current.fitToCoordinates(result.coordinates, {
+                            //         edgePadding: {
+                            //             right: 30,
+                            //             bottom: 200,
+                            //             left: 30,
+                            //             top: 200,
+                            //         }
+                            //     })
+                            // }}
                         />
 
                     </MapView>
                 </View>
 
                 <RBSheet
-                    height={isStart ? 150 : 230}
+                    height={230}
                     animationType='slide'
                     ref={refRBSheet}
                     closeOnDragDown={true}
-                    closeOnPressMask={true}
+                    closeOnPressMask={isStart ? true : false}
                     customStyles={{
                         wrapper: {
                             backgroundColor: "transparent",
@@ -182,16 +197,16 @@ const MapIncage = ({ navigation, route, }) => {
                         },
                     }}
                 >
-                    {isStart === true ?
+                    {/* {isStart === true ?
                         <StartNavigation onPress={startNavigation} />
                         : null
-                    }
-                    {isStart === false ?
+                    } */}
+                    {isStart === true ?
                         <NavigationOptions cancel={cancellFunc} coordinate={{ latitude: 22.57837969499716, longitude: 88.43033557757735 }} />
                         : null
                     }
-                    {isStart === null ?
-                        <LocatePackage />
+                    {isStart === false ?
+                        <LocatePackage navigation={navigation} />
                         : null
                     }
                 </RBSheet>
