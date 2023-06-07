@@ -3,12 +3,13 @@ import React from 'react'
 import { useDispatch } from 'react-redux'
 import { getDeviceInfo } from '../services/slices/UserSlice';
 
-const LocatePackage = ({navigation}) => {
+const LocatePackage = ({navigation, cancellFunc}) => {
     const dispatch = useDispatch();
     const connectToDevice = () => {
         const formData = new FormData();
         formData.append("device_id", "SN:0000101592");
         dispatch(getDeviceInfo({formData, navigation}));
+        cancellFunc();
     }
 
     return (

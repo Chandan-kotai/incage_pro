@@ -204,11 +204,13 @@ const ConnectToDevice = ({ navigation }) => {
     }
 
     const discoverPeripherals = async () => {
+        // console.log("device_info?.device_id =>", device_info?.device_id);
         try {
             const peripherals = await BleManager.getDiscoveredPeripherals();
             const list = peripherals.filter(device => device?.name?.includes(device_info?.device_id));
             devices = list[0];
-            // console.log('Connected to device', peripherals);
+            // console.log('List device =>', peripherals);
+            // console.log('Connected to device =>', list);
 
             if (list[0]) {
                 await BleManager.connect(list[0]?.id);

@@ -62,7 +62,7 @@ export const getDeviceInfo = createAsyncThunk('/get-device.php', async ({ formDa
 
     try {
         const res = await axios(config);
-        console.log("response =>", res?.data);
+        // console.log("response =>", res?.data);
         if (res?.data?.status === true) {
             Toast.show({
                 type: 'success',

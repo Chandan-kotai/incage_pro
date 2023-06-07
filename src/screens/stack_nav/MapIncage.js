@@ -17,7 +17,7 @@ const MapIncage = ({ navigation, route, }) => {
     const mapRef = useRef();
     const [isStart, setIsStart] = useState(true);
     const { data } = route?.params;
-    const { location, device_id } = data;
+    const { latitude, longitude, device_id, address } = data;
 
 
     const origin = {
@@ -28,8 +28,8 @@ const MapIncage = ({ navigation, route, }) => {
     }
 
     const destination = {
-        latitude: Number(location?.latitude),
-        longitude: Number(location?.longitude),
+        latitude: Number(latitude),
+        longitude: Number(longitude),
         latitudeDelta: 0.026,
         longitudeDelta: 0.009,
     }
@@ -67,7 +67,7 @@ const MapIncage = ({ navigation, route, }) => {
             // Alert.alert("not yet Reached");
         }
 
-        console.log("isInsideCircle =>", res);
+        // console.log("isInsideCircle =>", res);
     }
 
     const requestLocationPermission = async () => {
@@ -111,12 +111,12 @@ const MapIncage = ({ navigation, route, }) => {
         requestLocationPermission();
 
         // background threading
-        const interval = setInterval(()=>{
-            getCurrentLocation()
+        const interval = setInterval(() => {
+            getCurrentLocation();
         }, 10000)
 
-        return ()=>{
-            if(isClear){
+        return () => {
+            if (isClear) {
                 clearInterval(interval);
             }
         }
@@ -124,7 +124,7 @@ const MapIncage = ({ navigation, route, }) => {
 
     return (
         <SafeAreaView style={styles.parent}>
-            <View>
+            <View style={{ position: "relative" }}>
                 {/* Map View */}
                 <View style={{}}>
                     <MapView
@@ -143,7 +143,7 @@ const MapIncage = ({ navigation, route, }) => {
                             // draggable
                             coordinate={destination}
                             title={device_id}
-                            description={"plot no.54 &55, Street Number 18, DN Block, Sector V, Bidhannagar, Kolkata, West Bengal 700091"}
+                            description={address}
                             image={require("../../assets/icons/locationlock.png")}
                         />
 
@@ -159,25 +159,31 @@ const MapIncage = ({ navigation, route, }) => {
                             origin={origin}
                             destination={destination}
                             apikey={GOOGLE_MAPS_APIKEY}
-                            // strokeWidth={3}
-                            // strokeColor="hotpink"
-                            // optimizeWaypoints={true}
-                            // onReady={res => {
-                            //     console.log("distance=>", res.distance);
-                            //     console.log("duration=>", res.duration);
+                        // strokeWidth={3}
+                        // strokeColor="hotpink"
+                        // optimizeWaypoints={true}
+                        // onReady={res => {
+                        //     console.log("distance=>", res.distance);
+                        //     console.log("duration=>", res.duration);
 
-                            //     mapRef.current.fitToCoordinates(result.coordinates, {
-                            //         edgePadding: {
-                            //             right: 30,
-                            //             bottom: 200,
-                            //             left: 30,
-                            //             top: 200,
-                            //         }
-                            //     })
-                            // }}
+                        //     mapRef.current.fitToCoordinates(result.coordinates, {
+                        //         edgePadding: {
+                        //             right: 30,
+                        //             bottom: 200,
+                        //             left: 30,
+                        //             top: 200,
+                        //         }
+                        //     })
+                        // }}
                         />
 
                     </MapView>
+
+                    <View style={{ position: "absolute", right: 20, bottom: 100 }}>
+                        <TouchableOpacity onPress={()=> refRBSheet.current.open()}>
+                            <Image style={{ width: 50, height: 50 }} source={require("../../assets/icons/uprbsheet.png")} />
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 <RBSheet
@@ -202,11 +208,11 @@ const MapIncage = ({ navigation, route, }) => {
                         : null
                     } */}
                     {isStart === true ?
-                        <NavigationOptions cancel={cancellFunc} coordinate={{ latitude: 22.57837969499716, longitude: 88.43033557757735 }} />
+                        <NavigationOptions cancel={cancellFunc} coordinate={{ latitude: latitude, longitude: longitude }} />
                         : null
                     }
                     {isStart === false ?
-                        <LocatePackage navigation={navigation} />
+                        <LocatePackage navigation={navigation} cancellFunc={cancellFunc} />
                         : null
                     }
                 </RBSheet>

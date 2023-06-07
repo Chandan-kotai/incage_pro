@@ -1,14 +1,16 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, TextInput, Alert, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CustomButton from '../../utils/CustomButton'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { userLogin } from '../../services/slices/UserSlice'
+import CustomLoader from '../../utils/CustomLoader'
 
 const SignIn = ({ navigation }) => {
     const [showPassword, setShowPassword] = useState(false)
     const [formValue, setFormValue] = useState({ email: "peter@gmail.com", password: "Abcd@123" });
     const [formError, setFormError] = useState({});
     const [isModal, setIsModal] = useState(false);
+    const { status } = useSelector(state => state.userSlice);
     const dispatch = useDispatch();
 
     const handleLogin = () => {
@@ -129,8 +131,7 @@ const SignIn = ({ navigation }) => {
                     </View>
                 </View>
                 {/* // modal */}
-                {/* <CustomModal isModal={isModal} modalExec={disableModal} textColor={"#000"} /> */}
-                {/* <CustomLoader loader={status} /> */}
+                <CustomLoader loader={status} />
             </ScrollView>
         </SafeAreaView >
     )

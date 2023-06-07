@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message'
 
 
-const LockUnlock = ({devices}) => {
+const LockUnlock = ({ devices }) => {
     const { lock_status } = useSelector(state => state.userSlice)
     // console.log(lock_status);
     const [isLock, setIsLock] = useState(lock_status[0] === "0" ? false : true);
@@ -80,11 +80,11 @@ const LockUnlock = ({devices}) => {
                     />
                 </TouchableOpacity>
             </View>
-            <Text style={{ marginTop: 0, fontSize: 18 }}>
+            <Text style={!isLock ? styles.lockText : styles.unlockText}>
                 {!isLock ?
-                    "Lock"
+                    "LOCK"
                     :
-                    "Unlock"
+                    "UNLOCK"
                 }
             </Text>
         </View>
@@ -94,6 +94,20 @@ const LockUnlock = ({devices}) => {
 const styles = StyleSheet.create({
     bodyWrap: {
         alignItems: 'center',
+    },
+    lockText: {
+        marginTop: 0,
+        fontSize: 25,
+        color: "#f00",
+        fontWeight: "bold",
+        letterSpacing: 4,
+    },
+    unlockText: {
+        marginTop: 0,
+        fontSize: 25,
+        color: "#0f0",
+        fontWeight: "bold",
+        letterSpacing: 4,
     }
 })
 

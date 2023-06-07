@@ -10,25 +10,17 @@ const Scanner = ({ navigation }) => {
 
     const scanBarCode = () => {
         setIsSacn(true);
-        // console.log("scan bar code");
-        // console.log("scan bar code", isScan);
-        // navigation.navigate("map");
+        // navigation.navigate("deliverylist");
     }
 
     const onSuccess = (e) => {
-        // console.log("event data=>", typeof e.data);
+        // console.log("event data=>", e);
         if (e?.data) {
             setLocData(JSON.parse(e.data));
             setIsSacn(false);
-            navigation.navigate("map", {data: JSON.parse(e?.data)});
+            navigation.navigate("deliverylist", {data: JSON.parse(e?.data)});
         }
     }
-
-    // console.log("Location Data =>", locData);
-
-    // useEffect(() => {
-
-    // }, [])
 
     return (
         <SafeAreaView style={styles.parent}>
@@ -49,7 +41,7 @@ const Scanner = ({ navigation }) => {
                             showMarker={true}
                         // flashMode={RNCamera.Constants.FlashMode.torch}
                         />
-                        : <Image style={{}} source={require('../../assets/images/scanner.png')}/>
+                        : <Image style={{width: 300, height: 300}} source={require('../../assets/images/scanner1.gif')}/>
                     }
                 </View>
                 <CustomButton btnText={"Scan Barcode"} onPressFunc={scanBarCode} />
@@ -62,6 +54,7 @@ const styles = StyleSheet.create({
     parent: {
         flex: 1,
         alignItems: "center",
+        backgroundColor: "#fff"
     },
     head: {
         paddingVertical: 10,
