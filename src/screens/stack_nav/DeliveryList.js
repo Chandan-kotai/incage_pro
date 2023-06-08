@@ -27,33 +27,48 @@ const DeliveryList = ({ navigation, route }) => {
         </View>
 
         {/* delivery list */}
-        <Text style={{ fontSize: 20, color: "#000", marginLeft: 20, fontWeight: "bold", marginBottom: 20 }}>Delivery List</Text>
+        <View style={styles.headingWrap}>
+          <Text style={{ fontSize: 20, color: "#000", marginLeft: 20, fontWeight: "bold" }}>Delivery List</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("scanner")}>
+            <Image style={{ width: 28, height: 28 }} source={require("../../assets/icons/qr-code.png")} />
+          </TouchableOpacity>
+        </View>
+        {route?.params?.data?.length ?
+          <FlatList
+            data={route?.params?.data}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => index}
+            renderItem={({ item, index }) => (
+              <View>
+                {index === 0 ? <View style={{ marginTop: 10 }}></View> : null}
+                <TouchableOpacity onPress={() => navigation.navigate("map", { data: item })}>
+                  <View style={styles.listWrap}>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      <Image style={styles.boxImage} source={require("../../assets/images/package.png")} />
+                      <View style={{ marginLeft: 5 }}>
 
-        <FlatList
-          data={route?.params?.data}
-          keyExtractor={(item, index) => index}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate("map", { data: item })}>
-              <View style={styles.listWrap}>
-                <View style={{flexDirection: "row", alignItems: "center"}}>
-                  <Image style={styles.boxImage} source={require("../../assets/images/package.png")} />
-                  <View style={{marginLeft: 5}}>
+                        <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
+                          <Text style={styles.heading}>Product Code: </Text>
+                          <Text style={{ fontSize: 13, }}>{item?.product_code}</Text>
+                        </View>
 
-                    <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
-                      <Text style={styles.heading}>Product Code: </Text>
-                      <Text style={{ fontSize: 13, }}>{item?.product_code}</Text>
+                        <Text style={styles.heading}>Address: </Text>
+                        <Text numberOfLines={4} style={{ width: 170, fontSize: 13, marginLeft: 5 }}>{item?.address}</Text>
+
+                      </View>
                     </View>
-
-                    <Text style={styles.heading}>Address: </Text>
-                    <Text numberOfLines={4} style={{ width: 170, fontSize: 13, marginLeft: 5 }}>{item?.address}</Text>
-
                   </View>
-                </View>
+                </TouchableOpacity>
+                {index === route?.params?.data?.length - 1 ? <View style={{ marginBottom: (50 * route?.params?.data?.length) + 20 }}></View> : null}
               </View>
-            </TouchableOpacity>
-          )}
-        />
-
+            )}
+          />
+          :
+          <View style={{ alignItems: "center", justifyContent: "center", height: "75%" }}>
+            <Text style={{ color: "#000", fontSize: 26 }}>No Records Yet !</Text>
+            <Text style={{ color: "#000", fontSize: 12 }}>Please Scan to Update the Records.</Text>
+          </View>
+        }
       </View>
     </SafeAreaView>
   )
@@ -98,12 +113,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 20
   },
+  headingWrap: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 20,
+    marginRight: 20,
+    marginTop: 10,
+  },
   heading: {
     fontSize: 13,
     fontWeight: "bold",
     color: "#000"
   },
-  boxImage:{
+  boxImage: {
     shadowColor: "#828283",
     shadowOffset: {
       width: 5,

@@ -22,7 +22,7 @@ export const userLogin = createAsyncThunk('/user-sign-in.php', async ({ loginDat
             Toast.show({
                 type: 'success',
                 text1: "🎉 Login Successfull",
-                text2: "Welcome "+ res?.data?.user_details?.name
+                text2: "Welcome " + res?.data?.user_details?.name
             });
 
             await AsyncStorage.setItem("@user", JSON.stringify(res?.data?.user_details));
@@ -31,7 +31,7 @@ export const userLogin = createAsyncThunk('/user-sign-in.php', async ({ loginDat
 
             navigation.replace("scanner");
             return res?.data;
-        }else{
+        } else {
             Toast.show({
                 type: 'error',
                 text1: "Login Failed!",
@@ -68,10 +68,10 @@ export const getDeviceInfo = createAsyncThunk('/get-device.php', async ({ formDa
                 type: 'success',
                 text1: "🎉 Device Info Fetched",
                 text2: res?.data?.message
-            });            
+            });
             navigation.navigate("connect");
             return res?.data;
-        }else{
+        } else {
             Toast.show({
                 type: 'error',
                 text1: "Device Info Fetch Unsuccessful!",
@@ -105,6 +105,11 @@ const UserSlice = createSlice({
         },
         setLockStatus(state, { payload }) {
             state.lock_status = payload;
+        },
+        loginByAsync(state, { payload }) {
+            const { user_details, token } = payload;
+            state.user = user_details;
+            state.token = token;
         }
     },
     extraReducers: builder => {
@@ -137,5 +142,5 @@ const UserSlice = createSlice({
     }
 });
 
-export const { userLogout, setLockStatus } = UserSlice.actions;
+export const { userLogout, setLockStatus, loginByAsync } = UserSlice.actions;
 export default UserSlice.reducer;

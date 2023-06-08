@@ -1,13 +1,38 @@
 import { StyleSheet, Text, View, Image, SafeAreaView } from 'react-native'
 import React, { useEffect } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { loginByAsync } from '../services/slices/UserSlice'
+import { useDispatch } from 'react-redux'
 
 const Splash = ({ navigation }) => {
+  const dispatch = useDispatch();
 
   useEffect(() => {
 
-    setTimeout(() => {
-      navigation.replace("splashsecond")
-    }, 3000)
+    const getLoginData = async () => {
+      const user = await AsyncStorage.getItem("@user");
+      const token = await AsyncStorage.getItem("@token");
+
+      const data = { user_details: JSON.parse(user), token: JSON.parse(token) }
+      // console.log("user =>", data.user_details, data.token);
+
+      setTimeout(() => {
+        if (user != null) {
+          // console.log("from if", user);
+          dispatch(loginByAsync(data));
+          navigation.replace("deliverylist");
+        } else {
+          // console.log("from else", user);
+          const withOutData = { user_details: null, token: null }
+          dispatch(loginByAsync(withOutData))
+          navigation.replace("splashsecond")
+        }
+      }, 2000);
+
+      // return clearTimeout(startPage);
+    }
+
+    getLoginData()
 
   }, [])
 

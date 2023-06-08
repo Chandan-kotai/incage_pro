@@ -155,6 +155,10 @@ const ConnectToDevice = ({ navigation }) => {
 
     }, [setBleLoader]);
 
+    useEffect(()=>{
+
+    }, [isConnect])
+
     // const { user, token } = useSelector(state => state.authSlice);
 
     const requestPermission = async () => {
@@ -210,7 +214,7 @@ const ConnectToDevice = ({ navigation }) => {
             const list = peripherals.filter(device => device?.name?.includes(device_info?.device_id));
             devices = list[0];
             // console.log('List device =>', peripherals);
-            // console.log('Connected to device =>', list);
+            console.log('Connected to device =>', list);
 
             if (list[0]) {
                 await BleManager.connect(list[0]?.id);
