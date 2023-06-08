@@ -127,7 +127,7 @@ const SignIn = ({ navigation }) => {
 
                     {/* // buttons */}
                     <View style={{ marginTop: 50 }}>
-                        <CustomButton btnText={"Login here"} onPressFunc={handleLogin} />
+                        <CustomButton btnText={"Login Here"} onPressFunc={handleLogin} btnWidth={110}/>
                     </View>
                 </View>
                 {/* // modal */}

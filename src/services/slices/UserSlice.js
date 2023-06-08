@@ -21,8 +21,7 @@ export const userLogin = createAsyncThunk('/user-sign-in.php', async ({ loginDat
         if (res?.data?.status === true) {
             Toast.show({
                 type: 'success',
-                text1: "🎉 Login Successfull",
-                text2: "Welcome " + res?.data?.user_details?.name
+                text1: "Logged In",
             });
 
             await AsyncStorage.setItem("@user", JSON.stringify(res?.data?.user_details));
@@ -64,19 +63,19 @@ export const getDeviceInfo = createAsyncThunk('/get-device.php', async ({ formDa
         const res = await axios(config);
         // console.log("response =>", res?.data);
         if (res?.data?.status === true) {
-            Toast.show({
-                type: 'success',
-                text1: "🎉 Device Info Fetched",
-                text2: res?.data?.message
-            });
+            // Toast.show({
+            //     type: 'success',
+            //     text1: "Device Info Fetched",
+            //     text2: res?.data?.message
+            // });
             navigation.navigate("connect");
             return res?.data;
         } else {
-            Toast.show({
-                type: 'error',
-                text1: "Device Info Fetch Unsuccessful!",
-                text2: res?.data?.message
-            });
+            // Toast.show({
+            //     type: 'error',
+            //     text1: "Device Info Fetch Unsuccessful!",
+            //     text2: res?.data?.message
+            // });
             return res?.data;
         }
     } catch (exc) {
@@ -106,7 +105,7 @@ const UserSlice = createSlice({
             state.token = null;
             AsyncStorage.removeItem("@user");
             AsyncStorage.removeItem("token");
-            payload.replace("splashsecond");
+            payload.replace("signin");
             state.status = false;
             Toast.show({
                 type: 'success',

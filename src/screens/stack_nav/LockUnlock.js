@@ -10,8 +10,7 @@ const LockUnlock = ({ devices }) => {
     const { lock_status } = useSelector(state => state.userSlice)
     // console.log(lock_status);
     const [isLock, setIsLock] = useState(lock_status[0] === "0" ? false : true);
-    const lockunlock = ["0xf5", "0x61", "0x00", "0x01", "0x5f", "0xea", "0x34"]; // F5 61 00 01 5F EA 34
-    // const setlockman = ["0xf5", "0x64", "0x00", "0x01", "0x5f", "0xba", "0x01"]; // F5 64 00 01 5F BA 01
+    const lockunlock = ["0xf5", "0x61", "0x00", "0x01", "0x5f", "0xea", "0x34"];
 
     const serviceUUID = "fff0";
     const charUUIDWrite = "fff2";
@@ -105,7 +104,7 @@ const styles = StyleSheet.create({
     unlockText: {
         marginTop: 0,
         fontSize: 25,
-        color: "#0f0",
+        color: "#00b050",
         fontWeight: "bold",
         letterSpacing: 4,
     }

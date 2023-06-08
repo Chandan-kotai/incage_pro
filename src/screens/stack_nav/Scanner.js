@@ -44,7 +44,7 @@ const Scanner = ({ navigation }) => {
                         : <Image style={{width: 300, height: 300}} source={require('../../assets/images/scanner1.gif')}/>
                     }
                 </View>
-                <CustomButton btnText={"Scan Barcode"} onPressFunc={scanBarCode} />
+                <CustomButton btnText={"Scan Barcode/QR code"} onPressFunc={scanBarCode} btnWidth={60} />
             </View>
         </SafeAreaView>
     )
@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
         height: 406,
         borderColor: "#2D75FF",
         borderRadius: 3,
+        backgroundColor: "#f9f7f1"
     },
 })
 

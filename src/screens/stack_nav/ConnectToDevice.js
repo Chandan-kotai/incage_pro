@@ -95,23 +95,24 @@ const genAuthArray = (phone, password, cmd, dlen, key) => {
 
 const BleManagerModule = NativeModules.BleManager;
 const BleManagerEmitter = new NativeEventEmitter(BleManagerModule);
+
 var devices;
 const serviceUUID = "fff0";
 const charUUIDWrite = "fff2";
 const charUUIDRead = "fff1";
-const randCode = ["0xf5", "0x20", "0x00", "0x00", "0x5f", "0x74"]; // F5 20 00 00 5F 74
-const statusCheck = ["0xf5", "0x60", "0x00", "0x00", "0x5f", "0xb4"]; // F5 60 00 00 5F B4
+const randCode = ["0xf5", "0x20", "0x00", "0x00", "0x5f", "0x74"];
+const statusCheck = ["0xf5", "0x60", "0x00", "0x00", "0x5f", "0xb4"];
 
 
 const ConnectToDevice = ({ navigation }) => {
     const [isConnect, setIsConnect] = useState(true);
-    const [isModal, setIsModal] = useState(false);
+    const [isUpdate, setIsUpdate] = useState(false);
     const [isPermission, setIsPermission] = useState(null)
     const [isScanning, setIsScanning] = useState(false);
     const [bleLoader, setBleLoader] = useState(false)
     const { device_info } = useSelector(state => state.userSlice);
     const dispatch = useDispatch();
-    let retryConter = 0;
+    let retryCounter = 0;
 
 
     useEffect(() => {
@@ -155,9 +156,9 @@ const ConnectToDevice = ({ navigation }) => {
 
     }, [setBleLoader]);
 
-    useEffect(()=>{
-
-    }, [isConnect])
+    useEffect(() => {
+        console.log("second update");
+    }, [isUpdate]);
 
     // const { user, token } = useSelector(state => state.authSlice);
 
@@ -193,6 +194,8 @@ const ConnectToDevice = ({ navigation }) => {
                     })
             }
         });
+
+        setIsUpdate(!isUpdate);
 
         if (!isScanning) {
             BleManager.scan([], 5, true)
@@ -236,7 +239,14 @@ const ConnectToDevice = ({ navigation }) => {
                     const payload = device_info?.pin?.split("").map(item => (item.charCodeAt()).toString(16));
                     const pwsdPair = calCsum("0f", "04", payload);
 
-                    const result1 = await readWriteComm(pwsdPair, list[0]);
+                    let result1 = await readWriteComm(pwsdPair, list[0]);
+
+                    if (result1.length == 0 && retryCounter == 0) {
+                        retryCounter++;
+                        result1 = await readWriteComm(pwsdPair, list[0]);
+                    } else {
+                        retryCounter = 0;
+                    }
                     console.log('result1:', result1);
 
                     if (result1[2] == "10") {
@@ -259,7 +269,7 @@ const ConnectToDevice = ({ navigation }) => {
                                 let result4 = await readWriteComm(statusCheck, list[0]);
                                 console.log('result4:', result4);
                                 if (result4[2] == "10") {
-                                    dispatch(setLockStatus(result4.slice(6,)))
+                                    dispatch(setLockStatus(result4.slice(6,)));
                                     setIsConnect(false);
                                 }
                             }
@@ -267,7 +277,7 @@ const ConnectToDevice = ({ navigation }) => {
                     }
                 } else {
                     console.log("from else");
-                    setIsModal(true);
+                    Alert.alert("Oops! Authorization Failed.");
                 }
 
             } else {
@@ -333,7 +343,7 @@ const ConnectToDevice = ({ navigation }) => {
                     </View>
                     {bleLoader === false ?
                         <View style={{ marginTop: 80 }}>
-                            <CustomButton btnText={"Tap to Connect"} onPressFunc={startScan} />
+                            <CustomButton btnText={"Tap to Connect"} onPressFunc={startScan} btnWidth={90} />
                         </View>
                         :
                         bleLoader === null ?

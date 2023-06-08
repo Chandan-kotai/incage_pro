@@ -28,7 +28,7 @@ const DeliveryList = ({ navigation, route }) => {
           {/* log out */}
           <View>
             <TouchableOpacity style={styles.button} onPress={() => dispatch(userLogout(navigation))}>
-              <Text style={{ color: "#fff" }}>Log Out</Text>
+              <Text style={{ color: "#fff", fontWeight: "bold" }}>Log Out</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -66,7 +66,7 @@ const DeliveryList = ({ navigation, route }) => {
                     </View>
                   </View>
                 </TouchableOpacity>
-                {index === route?.params?.data?.length - 1 ? <View style={{ marginBottom: (50 * route?.params?.data?.length) + 20 }}></View> : null}
+                {index === route?.params?.data?.length - 1 ? <View style={{ marginBottom: (40 * route?.params?.data?.length) + 20 }}></View> : null}
               </View>
             )}
           />

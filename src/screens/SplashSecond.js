@@ -22,7 +22,7 @@ const SplashSecond = ({ navigation }) => {
 
                 {/* //bottom part */}
                 <View style={styles.bottom}>
-                    <CustomButton btnText="Sign In" onPressFunc={signIn} />
+                    <CustomButton btnText="Sign In" onPressFunc={signIn} btnWidth={120} />
                 </View>
             </ImageBackground>
         </SafeAreaView>

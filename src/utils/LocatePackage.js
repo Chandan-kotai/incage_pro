@@ -19,7 +19,7 @@ const LocatePackage = ({navigation, cancellFunc}) => {
                 incage™ ?
             </Text>
             <View style={styles.buttonWrap}>
-                <TouchableOpacity style={styles.buttonYes}>
+                <TouchableOpacity style={styles.buttonYes} onPress={cancellFunc}>
                     <Text style={{ color: "#000" }}>Not Yet</Text>
                 </TouchableOpacity>
 

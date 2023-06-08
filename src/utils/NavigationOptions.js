@@ -2,17 +2,18 @@ import { Image, StyleSheet, Text, TouchableOpacity, View, Platform, Linking } fr
 import React from 'react'
 
 const NavigationOptions = ({ cancel, coordinate }) => {
-    const openGoogleMaps = ()=>{
+    const openGoogleMaps = () => {
         const url = `https://www.google.com/maps/search/?api=1&query=${coordinate?.latitude},${coordinate?.longitude}`;
-        Linking.openURL(url)
+        Linking.openURL(url);
     }
 
-    const openAppleMaps = ()=>{
+    const openAppleMaps = () => {
 
     }
 
-    const openWazeMaps = ()=>{
-
+    const openWazeMaps = () => {
+        const url = `https://www.waze.com/ul?ll=${coordinate?.latitude},${coordinate?.longitude}&navigate=yes`;
+        Linking.openURL(url);
     }
 
     return (
@@ -53,7 +54,7 @@ const NavigationOptions = ({ cancel, coordinate }) => {
 
             <View style={{ marginTop: 20 }}>
                 <TouchableOpacity style={styles.button} onPress={cancel}>
-                    <Text style={{color:"#fff", fontWeight: "bold", fontSize: 20}}>Cancel</Text>
+                    <Text style={{ color: "#fff", fontWeight: "bold", fontSize: 18 }}>Cancel</Text>
                 </TouchableOpacity>
             </View>
 
@@ -66,9 +67,10 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     text: {
-        color: "#000",
+        color: "#2D75FF",
         fontSize: 16,
         marginLeft: 10,
+        fontWeight: "bold"
     },
     button: {
         backgroundColor: "#FE2E2E",
@@ -83,16 +85,16 @@ const styles = StyleSheet.create({
         marginTop: 5,
         alignItems: "center",
         justifyContent: "center",
-        shadowColor: "rgba(0, 0, 0, 0.6)",
+        shadowColor: "#033EAE",
         shadowOffset: {
             width: 5,
             height: 10
         },
         shadowOpacity: 0.25,
-        shadowRadius: 10,
+        shadowRadius: 15,
         elevation: 5,
         borderRadius: 8,
-        backgroundColor: "#fff",
+        backgroundColor: "#EAF1FF",
         paddingVertical: 10,
     }
 })

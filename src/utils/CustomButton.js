@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-const CustomButton = ({ btnText, onPressFunc}) => {
+const CustomButton = ({ btnText, onPressFunc, btnWidth }) => {
     return (
         <View style={styles.main}>
-            <TouchableOpacity style={styles.button} onPress={onPressFunc}>
+            <TouchableOpacity style={[styles.button, { paddingHorizontal: btnWidth }]} onPress={onPressFunc}>
                 <Text style={styles.buttonText}>{btnText}</Text>
             </TouchableOpacity>
         </View>
@@ -12,18 +12,19 @@ const CustomButton = ({ btnText, onPressFunc}) => {
 }
 
 const styles = StyleSheet.create({
-    main:{
+    main: {
         alignItems: "center",
     },
-    button:{
-        paddingHorizontal: 120,
+    button: {
         paddingVertical: 10,
         backgroundColor: "#2D75FF",
         borderRadius: 3
     },
-    buttonText:{
-        color:"#fff",
+    buttonText: {
+        color: "#fff",
         textAlign: "center",
+        fontSize: 18,
+        fontWeight: "bold",
     }
 })
 
