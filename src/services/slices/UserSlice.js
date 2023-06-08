@@ -101,7 +101,18 @@ const UserSlice = createSlice({
     },
     reducers: {
         userLogout(state, { payload }) {
-            Alert("log out");
+            state.status = true;
+            state.user = null;
+            state.token = null;
+            AsyncStorage.removeItem("@user");
+            AsyncStorage.removeItem("token");
+            payload.replace("splashsecond");
+            state.status = false;
+            Toast.show({
+                type: 'success',
+                text1: "🎉 Logged Out Successful.",
+                text2: "Please Log In Again to Continue."
+            });
         },
         setLockStatus(state, { payload }) {
             state.lock_status = payload;

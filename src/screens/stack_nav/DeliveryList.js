@@ -1,8 +1,15 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, FlatList } from 'react-native'
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import CustomButton from '../../utils/CustomButton';
+import CustomLoader from '../../utils/CustomLoader';
+import { userLogout } from '../../services/slices/UserSlice';
 
 const DeliveryList = ({ navigation, route }) => {
   // console.log("delivery list =>", route?.params?.data);
+  const { status } = useSelector(state => state.userSlice);
+  const dispatch = useDispatch();
+
 
   return (
     <SafeAreaView style={styles.parent}>
@@ -20,7 +27,7 @@ const DeliveryList = ({ navigation, route }) => {
 
           {/* log out */}
           <View>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={() => dispatch(userLogout(navigation))}>
               <Text style={{ color: "#fff" }}>Log Out</Text>
             </TouchableOpacity>
           </View>
@@ -70,6 +77,7 @@ const DeliveryList = ({ navigation, route }) => {
           </View>
         }
       </View>
+      <CustomLoader loader={status} />
     </SafeAreaView>
   )
 }
