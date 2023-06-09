@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import BleManager from "react-native-ble-manager"
 import { Buffer } from 'buffer';
@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import Toast from 'react-native-toast-message'
 
 
-const LockUnlock = ({ devices }) => {
+const LockUnlock = ({ devices, navigation }) => {
     const { lock_status } = useSelector(state => state.userSlice)
     // console.log(lock_status);
     const [isLock, setIsLock] = useState(lock_status[0] === "0" ? false : true);
@@ -15,20 +15,20 @@ const LockUnlock = ({ devices }) => {
     const serviceUUID = "fff0";
     const charUUIDWrite = "fff2";
     const charUUIDRead = "fff1";
-    // console.log(devices);
-
+    
+    
     const readWriteComm = async (payload, devices) => {
         const data = [];
-
+        
         const buffer = Buffer.from(payload);
-
+        
         try {
             await BleManager.write(devices?.id, serviceUUID, charUUIDWrite, buffer.toJSON().data);
             console.log("Write Success");
-
+            
             await BleManager.startNotification(devices.id, serviceUUID, charUUIDRead);
             console.log("Notification started");
-
+            
             const value = await BleManager.read(devices?.id, serviceUUID, charUUIDRead);
             const res = value.map(item => item.toString(16))
             // console.log('Characteristic response:', res);
@@ -38,17 +38,30 @@ const LockUnlock = ({ devices }) => {
         }
         return data;
     }
-
+    
+    var lockCount = 0;
     const unlockLock = async () => {
+        console.log("lockCount", lockCount);
         try {
             const isConnected = await BleManager.isPeripheralConnected(devices?.id, [serviceUUID]);
             // console.log("isConnected =>", isConnected);
+
             if (isConnected) {
 
-                // lock unlock
-                const result = await readWriteComm(lockunlock, devices);
-                console.log("lock/unlock =>", result);
-                setIsLock(!isLock);
+                /* auth control */
+                if (lockCount === 2) {
+                    // navigation.replace("");
+                    Alert.alert("Auth Revoked!");
+                    lockCount = 0;
+                } else {
+                    // Increment lockCount
+                    lockCount++;
+
+                    /* lock unlock */
+                    const result = await readWriteComm(lockunlock, devices);
+                    console.log("lock/unlock =>", result);
+                    setIsLock(!isLock);
+                }
             } else {
                 Toast.show({
                     type: "error",
@@ -61,9 +74,9 @@ const LockUnlock = ({ devices }) => {
         }
     }
 
-    useEffect(() => {
+    // useEffect(() => {
 
-    }, [])
+    // }, [])
 
     return (
         <View style={styles.bodyWrap}>

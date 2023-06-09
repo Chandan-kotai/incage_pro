@@ -20,7 +20,10 @@ const Splash = ({ navigation }) => {
         if (user != null) {
           // console.log("from if", user);
           dispatch(loginByAsync(data));
-          navigation.replace("deliverylist");
+          navigation.replace("scanner");
+
+          /* forn delivery list */
+          // navigation.replace("deliverylist");
         } else {
           // console.log("from else", user);
           const withOutData = { user_details: null, token: null }

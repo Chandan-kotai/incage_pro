@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, Image, Alert, Linking } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, Image, Alert, Linking, ImageBackground } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CustomButton from '../../utils/CustomButton'
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -6,7 +6,6 @@ import { RNCamera } from 'react-native-camera';
 
 const Scanner = ({ navigation }) => {
     const [isScan, setIsSacn] = useState(false);
-    const [locData, setLocData] = useState(null);
 
     const scanBarCode = () => {
         setIsSacn(true);
@@ -16,9 +15,11 @@ const Scanner = ({ navigation }) => {
     const onSuccess = (e) => {
         // console.log("event data=>", e);
         if (e?.data) {
-            setLocData(JSON.parse(e.data));
             setIsSacn(false);
-            navigation.navigate("deliverylist", {data: JSON.parse(e?.data)});
+            navigation.navigate("map", { data: JSON.parse(e?.data) });
+
+            /* for delivery list navigation */
+            // navigation.navigate("deliverylist", {data: JSON.parse(e?.data)});
         }
     }
 
@@ -30,7 +31,11 @@ const Scanner = ({ navigation }) => {
 
             <View style={styles.body}>
                 {/* scanner window */}
-                <View style={styles.imageWrap}>
+                <ImageBackground
+                    source={require('../../assets/images/scannerfence.png')}
+                    style={styles.imageWrap}
+                    resizeMode="stretch"
+                >
                     {isScan ?
                         <QRCodeScanner
                             onRead={(e) => onSuccess(e)}
@@ -41,10 +46,13 @@ const Scanner = ({ navigation }) => {
                             showMarker={true}
                         // flashMode={RNCamera.Constants.FlashMode.torch}
                         />
-                        : <Image style={{width: 300, height: 300}} source={require('../../assets/images/scanner1.gif')}/>
+                        : <Image style={{ width: 250, height: 250 }} source={require('../../assets/images/scanner.gif')} />
                     }
+                </ImageBackground>
+
+                <View style={{marginTop: 60}}>
+                    <CustomButton btnText={"Scan Barcode/QR code"} onPressFunc={scanBarCode} btnWidth={40} />
                 </View>
-                <CustomButton btnText={"Scan Barcode/QR code"} onPressFunc={scanBarCode} btnWidth={60} />
             </View>
         </SafeAreaView>
     )
@@ -67,17 +75,18 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
+        // borderWidth: 1
     },
     imageWrap: {
         marginBottom: 80,
-        borderWidth: 3,
+        // borderWidth: 3,
         alignItems: "center",
         justifyContent: "center",
-        width: 306,
-        height: 406,
-        borderColor: "#2D75FF",
+        width: 250,
+        height: 250,
+        // borderColor: "#2D75FF",
         borderRadius: 3,
-        backgroundColor: "#f9f7f1"
+        // backgroundColor: "#f9f7f1"
     },
 })
 
