@@ -155,32 +155,32 @@ const MapIncage = ({ navigation, route, }) => {
                             fillColor="#dfe6e9"
                         />
 
-                        <MapViewDirections
+                        {/* <MapViewDirections
                             origin={origin}
                             destination={destination}
                             apikey={GOOGLE_MAPS_APIKEY}
-                        // strokeWidth={3}
-                        // strokeColor="hotpink"
-                        // optimizeWaypoints={true}
-                        // onReady={res => {
-                        //     console.log("distance=>", res.distance);
-                        //     console.log("duration=>", res.duration);
+                            strokeWidth={3}
+                            strokeColor="hotpink"
+                            optimizeWaypoints={true}
+                            onReady={res => {
+                                console.log("distance=>", res.distance);
+                                console.log("duration=>", res.duration);
 
-                        //     mapRef.current.fitToCoordinates(result.coordinates, {
-                        //         edgePadding: {
-                        //             right: 30,
-                        //             bottom: 200,
-                        //             left: 30,
-                        //             top: 200,
-                        //         }
-                        //     })
-                        // }}
-                        />
+                                mapRef.current.fitToCoordinates(result.coordinates, {
+                                    edgePadding: {
+                                        right: 30,
+                                        bottom: 200,
+                                        left: 30,
+                                        top: 200,
+                                    }
+                                })
+                            }}
+                        /> */}
 
                     </MapView>
 
                     <View style={{ position: "absolute", right: 20, bottom: 100 }}>
-                        <TouchableOpacity onPress={()=> refRBSheet.current.open()}>
+                        <TouchableOpacity onPress={() => refRBSheet.current.open()}>
                             <Image style={{ width: 50, height: 50 }} source={require("../../assets/icons/uprbsheet.png")} />
                         </TouchableOpacity>
                     </View>
